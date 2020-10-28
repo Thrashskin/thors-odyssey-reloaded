@@ -1,0 +1,36 @@
+header {
+    text-align: center;
+}
+
+canvas{
+    border: 2px solid black;
+}
+
+.gameboard-container {
+    display: flex;
+    justify-content: center;
+}
+
+.header-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.buttons-container{
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.start-button{
+    width: 200px;
+    font-size: medium;
+    margin-top: 10px;
+    border-radius: 5px;
+}
