@@ -56,7 +56,7 @@ class Gameboard {
                 //     break;
 
                 case 'easy':
-                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5));
+                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
                     break;
                 case 'medium':
                     this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
@@ -328,7 +328,7 @@ class Gameboard {
             );
 
             for (let j = 0; j < this.enemies.length; j++) {
-                this.checkCollisionAndDamage(this.enemies[j], throwable, `health-enemy${j+1}`, i, j);
+                this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);
             }
             // switch(this.difficultyLevel) {
             //     case 'easy':
