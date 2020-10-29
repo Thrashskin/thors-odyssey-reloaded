@@ -6,6 +6,7 @@ class Gameboard {
         this.backgroundImg = new Image();
         this.score = 0;
         this.warrior = undefined;
+        this.activeEnemies = undefined;
         //this.enemy = undefined;
         this.x = undefined;
         this.y = undefined;
@@ -13,7 +14,6 @@ class Gameboard {
         this.height = undefined;
         this.interval = undefined;
         this.warriorHealthBar = undefined;
-        this.enemyHealthBar = undefined;
         this.difficultyLevel = difficultyLevel;
         this.enemies = {
             enemy_1 : undefined,
@@ -25,9 +25,7 @@ class Gameboard {
     init() {
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
-        this.warriorHealthBar = document.getElementById('health-warrior');
-        this.enemyHealthBar = document.getElementById('health-enemy');
-        this.warrior = new Warrior(this, 300, 482, 100, 125, 'images/thor.png', 2000, 15);
+        this.warrior = new Warrior(this, 300, 482, 100, 125, 'images/thor.png', 20000, 15);
         this.x = 0;
         this.y = 0;
         this.width = canvas.width;
@@ -46,17 +44,18 @@ class Gameboard {
                     break;
                 case 'medium':
                     this.enemies.enemy_1 = new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5);
-                    this.enemies.enemy_2 = new Enemy(this, 150, 40, 100, 125, 'images/cthulhu.png', 5000, 5);
+                    this.enemies.enemy_2 = new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5);
                     this.activeEnemies = 2;
                     break;
                 case 'hard':
                     this.enemies.enemy_1 = new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5);
-                    this.enemies.enemy_2 = new Enemy(this, 150, 20, 100, 125, 'images/cthulhu.png', 6000, 5);
-                    this.enemies.enemy_3 = new Enemy(this, 300, 40, 100, 125, 'images/cthulhu.png', 7000, 5);
+                    this.enemies.enemy_2 = new Enemy(this, 150, 20, 100, 125, 'images/kraken.png', 6000, 5);
+                    this.enemies.enemy_3 = new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 7000, 5);
                     this.activeEnemies = 3;
                     break;
         }
-        this.createEnemies(this.difficultyLevel);
+        this.createCharacters(this.difficultyLevel);
+        this.warriorHealthBar = document.getElementById('health-warrior');
         this.start();
     }
 
@@ -88,7 +87,7 @@ class Gameboard {
                 case 'medium':
                     
                     this.enemies.enemy_1.move();
-                    this.drawEnemy(this.enemies.enemy_1.x, this.enemies.enemy_1.y, this.enemies.enemy_1.width, this.enemies.enemy_1.height);    
+                    this.drawEnemy(this.enemies.enemy_1, this.enemies.enemy_1.x, this.enemies.enemy_1.y, this.enemies.enemy_1.width, this.enemies.enemy_1.height);    
                     this.enemies.enemy_1.createAttacks();
                     this.executeEnemyActions(this.enemies.enemy_1);
 
@@ -117,7 +116,8 @@ class Gameboard {
                     break;
             }
             
-            if(this.activeEnemies === 0) {
+            if(this.activeEnemies <= 0) {
+                console.log('death');
                 clearInterval(this.interval);
             }
 
@@ -181,18 +181,25 @@ class Gameboard {
     drawDeath(x, y, width, height, src) {
         let img = new Image();
         img.src = src;  
-        img.onload = () => {
-            this.ctx.drawImage(
-                img,
-                x,
-                y,
-                width,
-                height
-            );
-        };
+        this.ctx.drawImage(
+            img,
+            x,
+            y,
+            width,
+            height
+        );
+        // img.onload = () => {
+        //     this.ctx.drawImage(
+        //         img,
+        //         x,
+        //         y,
+        //         width,
+        //         height
+        //     );
+        // };
     }
 
-    createEnemies(difficultyLevel) {
+    createCharacters(difficultyLevel) {
         this.createDomElements(difficultyLevel);
         let nodes = document.getElementById('characters').children;
         
@@ -250,7 +257,7 @@ class Gameboard {
                 nodes[2].children[1].setAttribute('max', this.enemies.enemy_2.health);
 
                 nodes[3].children[0].innerHTML = 'PASTA MONSTER';
-                nodes[3].children[1].setAttribute('id', 'health-enemy2');
+                nodes[3].children[1].setAttribute('id', 'health-enemy3');
                 nodes[3].children[1].setAttribute('value', this.enemies.enemy_3.health);
                 nodes[3].children[1].setAttribute('max', this.enemies.enemy_3.health);
                 
@@ -300,16 +307,16 @@ class Gameboard {
             
             switch(this.difficultyLevel) {
                 case 'easy':
-                    this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1');
+                    this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1', i);
                     break;
                 case 'medium':
-                    this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1');
-                    this.checkCollisionAndDamage(this.enemies.enemy_2, throwable, 'health-enemy2');
+                    this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1', i);
+                    this.checkCollisionAndDamage(this.enemies.enemy_2, throwable, 'health-enemy2', i);
                     break;
                 case 'hard':
-                    this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1');
-                    this.checkCollisionAndDamage(this.enemies.enemy_2, throwable, 'health-enemy2');
-                    this.checkCollisionAndDamage(this.enemies.enemy_3, throwable, 'health-enemy3');
+                    this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1', i);
+                    this.checkCollisionAndDamage(this.enemies.enemy_2, throwable, 'health-enemy2', i);
+                    this.checkCollisionAndDamage(this.enemies.enemy_3, throwable, 'health-enemy3', i);
                     break;
             }
 
@@ -322,7 +329,7 @@ class Gameboard {
         }
     }
 
-    checkCollisionAndDamage(enemy, throwable, healthBarId) {
+    checkCollisionAndDamage(enemy, throwable, healthBarId, i) {
 
         let healthBar = document.getElementById(healthBarId);
 
@@ -338,6 +345,7 @@ class Gameboard {
             this.drawDeath(enemy.x-100, enemy.y - 160 ,enemy.width*2+40, enemy.height*2+20, 'images/ghost.png');
             enemy.attacks = null;
             this.activeEnemies--;
+            //enemy = null;
         }
     }
     

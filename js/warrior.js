@@ -31,14 +31,11 @@ class Warrior extends Character {
                     } 
                     break;
                 case 65:
-                    this.attacks.push(new Throwable((this.x + this.width/2), (this.y), 35, 35, 'images/magentafireball.png', 35, 25));
+                    this.attacks.push(new Throwable((this.x + this.width/2), (this.y), 35, 35, 'images/magentafireball.png', 350, 25));
             }
         };   
     }
 
-    singleAttack() {
-
-    }
 
     superAttack() {
         
