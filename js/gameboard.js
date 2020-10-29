@@ -59,13 +59,13 @@ class Gameboard {
                     this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5));
                     break;
                 case 'medium':
-                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5));
-                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5));
+                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
+                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5, 'health-kraken'));
                     break;
                 case 'hard':
-                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5));
-                    this.enemies.push(new Enemy(this, 150, 20, 100, 125, 'images/kraken.png', 6000, 5));
-                    this.enemies.push(new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 7000, 5));
+                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
+                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5, 'health-kraken'));
+                    this.enemies.push(new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 7000, 5, 'health-pasta'));
                     break;
         }
         this.createCharacters(this.difficultyLevel);
@@ -237,7 +237,7 @@ class Gameboard {
                 nodes[0].children[1].setAttribute('max', this.warrior.health);
                 
                 nodes[1].children[0].innerHTML = 'CTHULHU';
-                nodes[1].children[1].setAttribute('id', 'health-enemy1');
+                nodes[1].children[1].setAttribute('id', 'health-cthulhu');
                 nodes[1].children[1].setAttribute('value', this.enemies[0].health);
                 nodes[1].children[1].setAttribute('max', this.enemies[0].health);
 
@@ -251,12 +251,12 @@ class Gameboard {
                 nodes[0].children[1].setAttribute('max', this.warrior.health);
                 
                 nodes[1].children[0].innerHTML = 'CTHULHU';
-                nodes[1].children[1].setAttribute('id', 'health-enemy1');
+                nodes[1].children[1].setAttribute('id', 'health-cthulhu');
                 nodes[1].children[1].setAttribute('value', this.enemies[0].health);
                 nodes[1].children[1].setAttribute('max', this.enemies[0].health);
 
                 nodes[2].children[0].innerHTML = 'THE KRAKEN';
-                nodes[2].children[1].setAttribute('id', 'health-enemy2');
+                nodes[2].children[1].setAttribute('id', 'health-kraken');
                 nodes[2].children[1].setAttribute('value', this.enemies[1].health);
                 nodes[2].children[1].setAttribute('max', this.enemies[1].health);
 
@@ -270,17 +270,17 @@ class Gameboard {
                 nodes[0].children[1].setAttribute('max', this.warrior.health);
                 
                 nodes[1].children[0].innerHTML = 'CTHULHU';
-                nodes[1].children[1].setAttribute('id', 'health-enemy1');
+                nodes[1].children[1].setAttribute('id', 'health-cthulhu');
                 nodes[1].children[1].setAttribute('value', this.enemies[0].health);
                 nodes[1].children[1].setAttribute('max', this.enemies[0].health);
 
                 nodes[2].children[0].innerHTML = 'THE KRAKEN';
-                nodes[2].children[1].setAttribute('id', 'health-enemy2');
+                nodes[2].children[1].setAttribute('id', 'health-kraken');
                 nodes[2].children[1].setAttribute('value', this.enemies[1].health);
                 nodes[2].children[1].setAttribute('max', this.enemies[1].health);
 
                 nodes[3].children[0].innerHTML = 'PASTA MONSTER';
-                nodes[3].children[1].setAttribute('id', 'health-enemy3');
+                nodes[3].children[1].setAttribute('id', 'health-pasta');
                 nodes[3].children[1].setAttribute('value', this.enemies[2].health);
                 nodes[3].children[1].setAttribute('max', this.enemies[2].health);
                 
@@ -354,9 +354,9 @@ class Gameboard {
         }
     }
 
-    checkCollisionAndDamage(enemy, throwable, healthBarId, i, j) {
+    checkCollisionAndDamage(enemy, throwable, i, j) {
 
-        let healthBar = document.getElementById(healthBarId);
+        let healthBar = document.getElementById(enemy.barId);
 
         if (throwable.hasCollided(enemy, true)) {
             this.warrior.attacks.splice(i, 1);

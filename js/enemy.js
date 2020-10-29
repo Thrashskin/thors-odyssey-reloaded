@@ -1,6 +1,7 @@
 class Enemy extends Character {
-    constructor(gameboard, x, y, width, height, src, life, pace) { 
+    constructor(gameboard, x, y, width, height, src, life, pace, barId) { 
         super(gameboard, x, y, width, height, src, life, pace) ;
+        this.barId = barId;
     }
 
 
