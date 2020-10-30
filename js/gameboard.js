@@ -24,36 +24,23 @@ class Gameboard {
     };
 
     init() {
+
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
-        this.warrior = new Warrior(this, 300, 482, 100, 125, 'images/thor.png', 20000, 15);
+        this.warrior = new Warrior(this, 300, 482, 100, 125, 'images/thor.png', 3000, 15);
         this.x = 0;
         this.y = 0;
         this.width = canvas.width;
         this.height = canvas.height;
+
         this.sounds = {
-            bullet_thor : new Audio('./sound-effects/shoot_thor.mp3'),
+            bullet_thor : new Audio('./sound-effects/throwknife2.mp3'),
             bullet_enemy : new Audio('./sound-effects/shoot_cthulhu.mp3'),
-            explosion : new Audio('./sound-effects/explosion.mp3')
+            explosion : new Audio('./sound-effects/explosion.mp3'),
+            super_attack : new Audio('./sound-effects/missile.mp3')
         };
 
         switch(this.difficultyLevel) {
-
-                // case 'easy':
-                //     this.enemies.enemy_1 = new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5);
-                //     this.activeEnemies = 1;
-                //     break;
-                // case 'medium':
-                //     this.enemies.enemy_1 = new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5);
-                //     this.enemies.enemy_2 = new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5);
-                //     this.activeEnemies = 2;
-                //     break;
-                // case 'hard':
-                //     this.enemies.enemy_1 = new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5);
-                //     this.enemies.enemy_2 = new Enemy(this, 150, 20, 100, 125, 'images/kraken.png', 6000, 5);
-                //     this.enemies.enemy_3 = new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 7000, 5);
-                //     this.activeEnemies = 3;
-                //     break;
 
                 case 'easy':
                     this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
@@ -68,12 +55,16 @@ class Gameboard {
                     this.enemies.push(new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 7000, 5, 'health-pasta'));
                     break;
         }
+
         this.createCharacters(this.difficultyLevel);
         this.warriorHealthBar = document.getElementById('health-warrior');
+        this.powerBar = this.createPowerBar('power-warrior');
+        console.log(this.powerBar);
         this.start();
     }
 
     start() {
+
         this.clear();   
         this.drawBackground();
         this.drawWarrior(this.warrior.x, this.warrior.y, this.warrior.width, this.warrior.height);
@@ -87,60 +78,17 @@ class Gameboard {
             this.drawWarrior(this.warrior.x, this.warrior.y, this.warrior.width, this.warrior.height);
             this.executeWarriorActions();
 
+    
             for (let i = 0; i <this.enemies.length; i++) {
                 this.enemies[i].move();
                 this.drawEnemy(this.enemies[i], this.enemies[i].x, this.enemies[i].y, this.enemies[i].width, this.enemies[i].height);    
                 this.enemies[i].createAttacks();
                 this.executeEnemyActions(this.enemies[i]);
             }
-
-            
-
-            // switch(this.difficultyLevel) {
-
-            //     case 'easy':
-
-            //         this.enemies.enemy_1.move();
-            //         this.drawEnemy(this.enemies.enemy_1, this.enemies.enemy_1.x, this.enemies.enemy_1.y, this.enemies.enemy_1.width, this.enemies.enemy_1.height);    
-            //         this.enemies.enemy_1.createAttacks();
-            //         this.executeEnemyActions(this.enemies.enemy_1);
-
-            //         break;
-
-            //     case 'medium':
-                    
-            //         this.enemies.enemy_1.move();
-            //         this.drawEnemy(this.enemies.enemy_1, this.enemies.enemy_1.x, this.enemies.enemy_1.y, this.enemies.enemy_1.width, this.enemies.enemy_1.height);    
-            //         this.enemies.enemy_1.createAttacks();
-            //         this.executeEnemyActions(this.enemies.enemy_1);
-
-            //         this.enemies.enemy_2.move();
-            //         this.drawEnemy(this.enemies.enemy_2, this.enemies.enemy_2.x, this.enemies.enemy_2.y, this.enemies.enemy_2.width, this.enemies.enemy_2.height);    
-            //         this.enemies.enemy_2.createAttacks();
-            //         this.executeEnemyActions(this.enemies.enemy_2);
-
-            //         break;
-
-            //     case 'hard':
-            //         this.enemies.enemy_1.move();    
-            //         this.drawEnemy(this.enemies.enemy_1, this.enemies.enemy_1.x, this.enemies.enemy_1.y, this.enemies.enemy_1.width, this.enemies.enemy_1.height);    
-            //         this.enemies.enemy_1.createAttacks();
-            //         this.executeEnemyActions(this.enemies.enemy_1);
-
-            //         this.enemies.enemy_2.move();
-            //         this.drawEnemy(this.enemies.enemy_2, this.enemies.enemy_2.x, this.enemies.enemy_2.y, this.enemies.enemy_2.width, this.enemies.enemy_2.height);    
-            //         this.enemies.enemy_2.createAttacks();
-            //         this.executeEnemyActions(this.enemies.enemy_2);
-
-            //         this.enemies.enemy_3.move();
-            //         this.drawEnemy(this.enemies.enemy_3, this.enemies.enemy_3.x, this.enemies.enemy_3.y, this.enemies.enemy_3.width, this.enemies.enemy_3.height);    
-            //         this.enemies.enemy_3.createAttacks();
-            //         this.executeEnemyActions(this.enemies.enemy_3);
-            //         break;
-            // }
             
             if(this.enemies.length === 0) {
                 console.log('death');
+                this.drawDeath(500,500,500,500, './images/awesome.png');
                 clearInterval(this.interval);
             }
 
@@ -211,15 +159,7 @@ class Gameboard {
             width,
             height
         );
-        // img.onload = () => {
-        //     this.ctx.drawImage(
-        //         img,
-        //         x,
-        //         y,
-        //         width,
-        //         height
-        //     );
-        // };
+
     }
 
     createCharacters(difficultyLevel) {
@@ -302,6 +242,18 @@ class Gameboard {
         }
     }
 
+    createPowerBar(id){
+        let emptyBar = this.createCharacterElement();
+        let powerBar = document.getElementById('characters').parentNode.appendChild(emptyBar);
+
+        powerBar.children[0].innerHTML = 'POWER';
+        powerBar.children[1].setAttribute('id', id);
+        powerBar.children[1].setAttribute('value', this.warrior.power);
+        powerBar.children[1].setAttribute('max', 1000);
+
+        return powerBar.children[1];
+    }
+
     createCharacterElement() {
         let divTag = document.createElement('div');
         let pTag = document.createElement('p');
@@ -328,26 +280,29 @@ class Gameboard {
             );
 
             for (let j = 0; j < this.enemies.length; j++) {
+                this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);   
+            }
+        }
+
+        for (let i=0; i<this.warrior.superAttacks.length; i++) {
+            let throwable = this.warrior.superAttacks[i];
+            throwable.move(false);
+            this.sounds.super_attack.play();
+            throwable.img.src = throwable.src;
+            this.ctx.drawImage(
+                throwable.img, 
+                throwable.x, 
+                throwable.y, 
+                throwable.width, 
+                throwable.height
+            );
+
+            for (let j = 0; j < this.enemies.length; j++) {
                 this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);
             }
-            // switch(this.difficultyLevel) {
-            //     case 'easy':
-            //         this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1', i);
-            //         break;
-            //     case 'medium':
-            //         this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1', i);
-            //         this.checkCollisionAndDamage(this.enemies.enemy_2, throwable, 'health-enemy2', i);
-            //         break;
-            //     case 'hard':
-            //         this.checkCollisionAndDamage(this.enemies.enemy_1, throwable, 'health-enemy1', i);
-            //         this.checkCollisionAndDamage(this.enemies.enemy_2, throwable, 'health-enemy2', i);
-            //         this.checkCollisionAndDamage(this.enemies.enemy_3, throwable, 'health-enemy3', i);
-            //         break;
-            // }
-
 
             if (throwable.y < 0) {
-                this.warrior.attacks.splice(i, 1);
+                this.warrior.superAttacks.splice(i, 1);
             }
 
 
@@ -363,15 +318,32 @@ class Gameboard {
             enemy.health -= throwable.damage;
             healthBar.value = enemy.health;
             this.sounds.explosion.play();
-            this.drawExplosion(throwable, throwable.y, 'images/explosion_2.png');
+            this.drawExplosion(throwable, throwable.y, './images/explosion_2.png');
+
+            switch(this.difficultyLevel) {
+                case 'easy':
+                    this.warrior.power += 1;
+                    break;
+                case 'medium':
+                    this.warrior.power += 2;
+                    break;
+                case 'hard':
+                    this.warrior.power += 4;
+                    break;
+            }
+            console.log(this.powerBar);
+            this.powerBar.value = this.warrior.power;
         }
 
         if(enemy.health <= 0) {
-            this.drawDeath(enemy.x-100, enemy.y - 160 ,enemy.width*2+40, enemy.height*2+20, 'images/ghost.png');
-            enemy.attacks = null;
+            //this.drawDeath(enemy.x-100, enemy.y - 160 ,enemy.width*2+40, enemy.height*2+20, './images/ghost.png');
+            //enemy.attacks = null;
             //this.activeEnemies--;
+            console.log(enemy);
+            //delete this.enemies[j];
             this.enemies.splice(j, 1);
         }
+
     }
     
 
@@ -394,20 +366,20 @@ class Gameboard {
             if (throwable.hasCollided(this.warrior, false)) {
                 this.warrior.health -= throwable.damage;
                 this.sounds.explosion.play();
-                this.drawExplosion(throwable, this.warrior.y, 'images/explosion_2.png');
+                this.drawExplosion(throwable, this.warrior.y, './images/explosion_2.png');
                 enemy.attacks.splice(i, 1);
                 this.warriorHealthBar.value = this.warrior.health;
             }
 
             if (throwable.y > 590) {
                 this.sounds.explosion.play();
-                this.drawExplosion(throwable, 550, 'images/explosion_2.png');
+                this.drawExplosion(throwable, 550, './images/explosion_2.png');
                 enemy.attacks.splice(i, 1);
             }
 
             if(this.warrior.health <= 0) {
-                this.drawDeath(this.warrior.x-20, this.warrior.y, this.warrior.width, this.warrior.height,'images/tombstone.png');
-                
+                this.drawDeath(this.warrior.x-20, this.warrior.y, this.warrior.width, this.warrior.height,'./images/tombstone.png');
+                this.drawDeath(500,500,500,500, '/images/gameover.png');
                 clearInterval(this.interval);
             }
             
