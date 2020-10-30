@@ -27,7 +27,7 @@ class Gameboard {
 
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
-        this.warrior = new Warrior(this, 300, 482, 100, 125, 'images/thor.png', 3000, 15);
+        this.warrior = new Warrior(this, 300, 482, 100, 125, 'images/thor.png', 2000, 15);
         this.x = 0;
         this.y = 0;
         this.width = canvas.width;
@@ -43,16 +43,16 @@ class Gameboard {
         switch(this.difficultyLevel) {
 
                 case 'easy':
-                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
+                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 3000, 5, 'health-cthulhu'));
                     break;
                 case 'medium':
-                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
-                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5, 'health-kraken'));
+                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 3000, 5, 'health-cthulhu'));
+                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 3500, 5, 'health-kraken'));
                     break;
                 case 'hard':
-                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 5000, 5, 'health-cthulhu'));
-                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 5000, 5, 'health-kraken'));
-                    this.enemies.push(new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 7000, 5, 'health-pasta'));
+                    this.enemies.push(new Enemy(this, 0, 10, 100, 125, 'images/cthulhu.png', 3000, 5, 'health-cthulhu'));
+                    this.enemies.push(new Enemy(this, 150, 40, 100, 125, 'images/kraken.png', 3500, 5, 'health-kraken'));
+                    this.enemies.push(new Enemy(this, 300, 40, 100, 125, 'images/pasta.png', 4000, 5, 'health-pasta'));
                     break;
         }
 
@@ -86,9 +86,9 @@ class Gameboard {
                 this.executeEnemyActions(this.enemies[i]);
             }
             
-            if(this.enemies.length === 0) {
+            if(this.allEnemiesDead()) {
                 console.log('death');
-                this.drawDeath(100,100,500,500, 'images/awesome.png');
+                this.drawDeath(250,80,500,500, 'images/awesome.png');
                 clearInterval(this.interval);
             }
 
@@ -283,7 +283,11 @@ class Gameboard {
             );
 
             for (let j = 0; j < this.enemies.length; j++) {
-                this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);   
+                if (this.enemies[j].alive === false) {
+                    continue;
+                } else {
+                    this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);   
+                }
             }
         }
 
@@ -301,7 +305,12 @@ class Gameboard {
             );
 
             for (let j = 0; j < this.enemies.length; j++) {
-                this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);
+
+                if (this.enemies[j].alive === false) {
+                    continue;
+                } else {
+                    this.checkCollisionAndDamage(this.enemies[j], throwable, this.enemies[j].barId, i, j);  
+                }
             }
 
             if (throwable.y < 0) {
@@ -341,10 +350,12 @@ class Gameboard {
         if(enemy.health <= 0) {
             //this.drawDeath(enemy.x-100, enemy.y - 160 ,enemy.width*2+40, enemy.height*2+20, './images/ghost.png');
             //enemy.attacks = null;
-            //this.activeEnemies--;
-            console.log(enemy);
-            //delete this.enemies[j];
-            this.enemies.splice(j, 1);
+            enemy.x = -100;
+            enemy.y = -100;
+            enemy.width = 1;
+            enemy.height = 1;
+            enemy.src = '';
+            enemy.alive = false;
         }
 
     }
@@ -382,12 +393,22 @@ class Gameboard {
 
             if(this.warrior.health <= 0) {
                 this.drawDeath(this.warrior.x-20, this.warrior.y, this.warrior.width, this.warrior.height,'./images/tombstone.png');
-                this.drawDeath(100,100,500,500, '/images/gameover.png');
+                this.drawDeath(250,80,500,500, '/images/gameover.png');
                 clearInterval(this.interval);
             }
             
     }
 
+    }
+
+    allEnemiesDead() {
+        let alive = this.enemies.filter(enemy => enemy.alive === true);
+        
+        if (alive.length > 0)  {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

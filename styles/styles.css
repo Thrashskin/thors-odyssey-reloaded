@@ -34,3 +34,14 @@ canvas{
     margin-top: 10px;
     border-radius: 5px;
 }
+
+.restart-button{
+    width: 200px;
+    font-size: medium;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+footer {
+    text-align: center;
+}

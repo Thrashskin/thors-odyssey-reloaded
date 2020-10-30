@@ -1,4 +1,5 @@
 window.onload = () => {
+
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let backGroundImg = new Image();
@@ -19,7 +20,11 @@ window.onload = () => {
     function startGame(difficultyLevel) {
         let gameboard = new Gameboard(difficultyLevel);
         gameboard.init();
-        console.log(difficultyLevel);
+        //console.log(difficultyLevel);
     }
+
+    document.getElementById('reset').addEventListener('click', () => {
+        window.location.reload('false');
+    });
 
 };
