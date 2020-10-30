@@ -6,18 +6,6 @@ class Warrior extends Character {
     }
 
     act() {
-        // window.addEventListener('keydown', (e) => {
-        //     switch(e.keyCode) {
-        //         case 37: //left arrow
-        //             if (this.x >= 10) this.x -= 20;
-        //             console.log('xxx', this.x);
-        //             break;
-        //         case 39: //right arrow
-        //             if (this.x <= 490 - this.width) this.x += 20;
-        //             console.log('xxx', this.x);
-        //             break;
-        //     }
-        // });   
 
         document.onkeydown = event => {
             const key = event.keyCode;
@@ -37,7 +25,7 @@ class Warrior extends Character {
                     break;
                 case 81:
                     if (this.power > 1000) {
-                        this.superAttacks.push(new Throwable((this.x + this.width/2), this.y, 100, 100, 'images/superAttack.png', 150, 50));
+                        this.superAttacks.push(new Throwable((this.x + this.width/2), this.y, 100, 100, 'images/superAttack.png', 150, 35));
                         this.power = 0;
                     }
                     break;

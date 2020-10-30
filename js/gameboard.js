@@ -334,13 +334,13 @@ class Gameboard {
 
             switch(this.difficultyLevel) {
                 case 'easy':
-                    this.warrior.power += 1;
+                    this.warrior.power += 10;
                     break;
                 case 'medium':
-                    this.warrior.power += 2;
+                    this.warrior.power += 15;
                     break;
                 case 'hard':
-                    this.warrior.power += 4;
+                    this.warrior.power += 20;
                     break;
             }
             console.log(this.powerBar);
@@ -393,7 +393,7 @@ class Gameboard {
 
             if(this.warrior.health <= 0) {
                 this.drawDeath(this.warrior.x-20, this.warrior.y, this.warrior.width, this.warrior.height,'./images/tombstone.png');
-                this.drawDeath(250,80,500,500, '/images/gameover.png');
+                this.drawDeath(250,80,500,500, 'images/gameover.png');
                 clearInterval(this.interval);
             }
             
