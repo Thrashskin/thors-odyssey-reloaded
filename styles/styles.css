@@ -42,6 +42,11 @@ canvas{
     border-radius: 5px;
 }
 
+.diff-text {
+    text-align: center;
+    font-weight: bold;
+}
+
 footer {
     text-align: center;
 }
