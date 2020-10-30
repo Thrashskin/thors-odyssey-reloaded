@@ -14,6 +14,7 @@ window.onload = () => {
         button.addEventListener('click', () => {
             let difficultyLevel = button.getAttribute('id');
             startGame(difficultyLevel);
+            [...document.getElementsByClassName('start-button')].forEach(button => button.disabled = true);
         });
     });
 
