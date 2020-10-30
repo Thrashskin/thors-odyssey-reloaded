@@ -88,7 +88,7 @@ class Gameboard {
             
             if(this.enemies.length === 0) {
                 console.log('death');
-                this.drawDeath(500,500,500,500, './images/awesome.png');
+                this.drawDeath(100,100,500,500, 'images/awesome.png');
                 clearInterval(this.interval);
             }
 
@@ -152,13 +152,16 @@ class Gameboard {
     drawDeath(x, y, width, height, src) {
         let img = new Image();
         img.src = src;  
-        this.ctx.drawImage(
-            img,
-            x,
-            y,
-            width,
-            height
-        );
+        img.onload = () => {
+            this.ctx.drawImage(
+                img,
+                x,
+                y,
+                width,
+                height
+            );
+        };
+        
 
     }
 
@@ -379,7 +382,7 @@ class Gameboard {
 
             if(this.warrior.health <= 0) {
                 this.drawDeath(this.warrior.x-20, this.warrior.y, this.warrior.width, this.warrior.height,'./images/tombstone.png');
-                this.drawDeath(500,500,500,500, '/images/gameover.png');
+                this.drawDeath(100,100,500,500, '/images/gameover.png');
                 clearInterval(this.interval);
             }
             
