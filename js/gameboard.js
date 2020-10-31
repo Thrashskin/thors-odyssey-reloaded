@@ -392,7 +392,7 @@ class Gameboard {
 
             if(this.warrior.health <= 0) {
                 this.drawDeath(this.warrior.x-20, this.warrior.y, this.warrior.width, this.warrior.height,'./images/tombstone.png');
-                this.drawDeath(250,80,500,500, './images/gameover.png');
+                this.drawDeath(250,50,400,350, './images/gameover.png');
                 clearInterval(this.interval);
             }
             
